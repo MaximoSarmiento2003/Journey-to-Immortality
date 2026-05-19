@@ -6,6 +6,9 @@ from "./store/gameStore";
 import { calculateKiGain }
 from "./systems/cultivation/gainKi";
 
+import { getRealmByLevel }
+from "./utils/realmsUtils";
+
 function App() {
 
   const player =
@@ -19,6 +22,12 @@ function App() {
       (state) =>
         state.progressQiCultivation
     );
+
+    const attemptQiBreakthrough =
+  useGameStore(
+    (state) =>
+      state.attemptQiBreakthrough
+  );
 
   useEffect(() => {
 
@@ -41,40 +50,61 @@ function App() {
     progressQiCultivation,
   ]);
 
-  return (
-    <div>
-
-      <h1>
-        {player.name}
-      </h1>
-
-      <p>
-        Realm:
-        {" "}
-        {player.qiCultivation.realm}
-      </p>
-
-      <p>
-        Stage:
-        {" "}
-        {player.qiCultivation.stage}
-      </p>
-
-      <p>
-        Current Ki:
-        {" "}
-        {player.qiCultivation.currentKi
-          .toFixed(2)}
-      </p>
-
-      <p>
-        Required Ki:
-        {" "}
-        {player.qiCultivation.requiredKi}
-      </p>
-
-    </div>
+  const currentRealm =
+  getRealmByLevel(
+    player.qiCultivation.realm
   );
+
+ return (
+  <div>
+
+    <h1>
+      {player.name}
+    </h1>
+
+    <p>
+      Realm:
+      {" "}
+      {currentRealm?.name}
+    </p>
+
+    <p>
+      Stage:
+      {" "}
+      {player.qiCultivation.stage}
+    </p>
+
+    <p>
+      Current Ki:
+      {" "}
+      {player.qiCultivation.currentKi
+        .toFixed(2)}
+    </p>
+
+    <p>
+      Required Ki:
+      {" "}
+      {player.qiCultivation.requiredKi}
+    </p>
+
+    <p>
+      Status:
+      {" "}
+      {
+        player.qiCultivation.isAtPeak
+          ? "Peak"
+          : "Cultivating"
+      }
+    </p>
+
+    <button
+      onClick={attemptQiBreakthrough}
+    >
+      Breakthrough
+    </button>
+
+  </div>
+);
 }
 
 export default App;

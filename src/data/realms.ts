@@ -6,7 +6,7 @@ export const QI_REALMS: CultivationRealm[] = [
   {
     name: "Acupoint Opening",
 
-    level: 0,
+    level: 1,
 
     stages: 10,
 
@@ -129,7 +129,7 @@ export const BODY_REALMS: CultivationRealm[] = [
   {
     name: "Body Tempering",
 
-    level: 0,
+    level: 1,
 
     stages: 10,
 
@@ -141,7 +141,7 @@ export const BODY_REALMS: CultivationRealm[] = [
   {
     name: "Bone Forging",
 
-    level: 1,
+    level: 2,
 
     stages: 10,
 
@@ -153,7 +153,7 @@ export const BODY_REALMS: CultivationRealm[] = [
   {
     name: "Bronze Skin",
 
-    level: 2,
+    level: 3,
 
     stages: 10,
 
@@ -165,7 +165,7 @@ export const BODY_REALMS: CultivationRealm[] = [
   {
     name: "Iron Body",
 
-    level: 3,
+    level: 4,
 
     stages: 10,
 
@@ -177,7 +177,7 @@ export const BODY_REALMS: CultivationRealm[] = [
   {
     name: "Jade Body",
 
-    level: 4,
+    level: 5,
 
     stages: 10,
 
@@ -189,7 +189,7 @@ export const BODY_REALMS: CultivationRealm[] = [
   {
     name: "Golden Body",
 
-    level: 5,
+    level: 6,
 
     stages: 10,
 
@@ -201,7 +201,7 @@ export const BODY_REALMS: CultivationRealm[] = [
   {
     name: "Saint Body",
 
-    level: 6,
+    level: 7,
 
     stages: 10,
 
@@ -213,7 +213,7 @@ export const BODY_REALMS: CultivationRealm[] = [
   {
     name: "Lesser Immortal Body",
 
-    level: 7,
+    level: 8,
 
     stages: 10,
 
@@ -227,7 +227,7 @@ export const SOUL_REALMS: CultivationRealm[] = [
   {
     name: "Soul Awakening",
 
-    level: 0,
+    level: 1,
 
     stages: 10,
 
@@ -239,7 +239,7 @@ export const SOUL_REALMS: CultivationRealm[] = [
   {
     name: "Soul Sense",
 
-    level: 1,
+    level: 2,
 
     stages: 10,
 
@@ -251,7 +251,7 @@ export const SOUL_REALMS: CultivationRealm[] = [
   {
     name: "Spiritual Awareness",
 
-    level: 2,
+    level: 3,
 
     stages: 10,
 
@@ -263,7 +263,7 @@ export const SOUL_REALMS: CultivationRealm[] = [
   {
     name: "Spiritual Condesation",
 
-    level: 3,
+    level: 4,
 
     stages: 10,
 
@@ -275,7 +275,7 @@ export const SOUL_REALMS: CultivationRealm[] = [
   {
     name: "Spirit embryo",
 
-    level: 4,
+    level: 5,
 
     stages: 10,
 
@@ -287,7 +287,7 @@ export const SOUL_REALMS: CultivationRealm[] = [
   {
     name: "Soul Wanderer",
 
-    level: 5,
+    level: 6,
 
     stages: 10,
 
@@ -299,7 +299,7 @@ export const SOUL_REALMS: CultivationRealm[] = [
   {
     name: "Lesser Soul Immortal",
 
-    level: 6,
+    level: 7,
 
     stages: 10,
 

@@ -9,6 +9,9 @@ from "../utils/createPlayer";
 import { progressCultivation }
 from "../systems/cultivation/progression";
 
+import { attemptBreakthrough }
+from "../systems/cultivation/breakthrough";
+
 interface GameStore {
   player: PlayerState;
 
@@ -20,12 +23,25 @@ interface GameStore {
   
     progressQiCultivation:
     () => void;
+
+    attemptQiBreakthrough:
+  () => void;
 }
 
 export const useGameStore =
   create<GameStore>((set) => ({
 
-    player: createPlayer("Player"),
+    player: createPlayer({
+  name: "Player",
+
+  innateStats: {
+    absorption: 1,
+    luck: 1,
+    comprehension: 1,
+    soulTalent: 1,
+    fate: 1,
+  },
+}),
 
     setPlayer: (player) =>
       set({ player }),
@@ -54,6 +70,20 @@ progressQiCultivation: () =>
       qiCultivation:
         progressCultivation(
           state.player.qiCultivation
+        ),
+    },
+
+  })),
+
+  attemptQiBreakthrough: () =>
+  set((state) => ({
+
+    player: {
+      ...state.player,
+
+      qiCultivation:
+        attemptBreakthrough(
+        state.player
         ),
     },
 

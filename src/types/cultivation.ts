@@ -26,6 +26,8 @@ export interface CultivationState {
   requiredKi: number;
 
   breakthroughChance: number;
+
+  isAtPeak: boolean;
 }
 
 export interface BreakthroughResult {

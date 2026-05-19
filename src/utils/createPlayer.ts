@@ -1,18 +1,24 @@
-import { QI_REALMS } from "../data/realms";
+import { QI_REALMS }
+from "../data/realms";
 
-import type { PlayerState } from "../types/player";
+import type { PlayerState }
+from "../types/player";
 
 import type {
   BaseStats,
-  InnateStats,
 } from "../types/stats";
+
+import type {
+  CharacterCreationData,
+} from "../types/characterCreation";
 
 import {
   createBaseAffinities,
   createBaseResistances,
 } from "../utils/statUtils";
 
-const createBaseStats = (): BaseStats => ({
+const createBaseStats =
+(): BaseStats => ({
   strength: 5,
 
   agility: 5,
@@ -30,25 +36,13 @@ const createBaseStats = (): BaseStats => ({
   constitution: 5,
 });
 
-const createInnateStats =
-(): InnateStats => ({
-  absorption: 1,
-
-  luck: 1,
-
-  comprehension: 1,
-
-  soulTalent: 1,
-
-  fate: 1,
-});
-
 export const createPlayer = (
-  name: string
+  characterData:
+    CharacterCreationData
 ): PlayerState => {
 
   return {
-    name,
+    name: characterData.name,
 
     race: "Human",
 
@@ -71,9 +65,12 @@ export const createPlayer = (
 
       currentKi: 0,
 
-      requiredKi: QI_REALMS[0].baseKiRequired,
+      requiredKi:
+        QI_REALMS[0].baseKiRequired,
 
       breakthroughChance: 1,
+
+      isAtPeak: false,
     },
 
     bodyCultivation: undefined,
@@ -82,7 +79,8 @@ export const createPlayer = (
 
     baseStats: createBaseStats(),
 
-    innateStats: createInnateStats(),
+    innateStats:
+      characterData.innateStats,
 
     resistances:
       createBaseResistances(),
