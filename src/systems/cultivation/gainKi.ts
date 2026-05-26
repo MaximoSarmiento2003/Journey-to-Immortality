@@ -7,36 +7,47 @@ export const calculateKiGain = (
 
   const baseGain = 1;
 
-  // Talento de absorción
+  // Absorption
   const absorptionBonus =
     player.innateStats.absorption;
 
-  // Poder espiritual
+  // Spiritual Power
   const spiritualPowerBonus =
     1 + (
-      player.baseStats.spiritualPower
-      * 0.05
+      player.baseStats
+        .spiritualPower *
+      0.05
     );
 
   // Soul Talent
   const soulTalentBonus =
     1 + (
-      player.innateStats.soulTalent
-      * 0.03
+      player.innateStats
+        .soulTalent *
+      0.03
     );
 
-  // Bonus por realm
-  const realmBonus =
-    1 + (
-      player.qiCultivation.realm
-      * 0.25
-    );
+  // Modifiers
+  const kiMultiplier =
+    player.modifiers
+      .kiMultiplier;
+
+  const cultivationSpeed =
+    player.modifiers
+      .cultivationSpeed;
 
   return (
+
     baseGain *
+
     absorptionBonus *
+
     spiritualPowerBonus *
+
     soulTalentBonus *
-    realmBonus
+
+    kiMultiplier *
+
+    cultivationSpeed
   );
 };

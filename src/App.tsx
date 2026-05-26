@@ -9,6 +9,8 @@ from "./systems/cultivation/gainKi";
 import { getRealmByLevel }
 from "./utils/realmsUtils";
 
+import { saveGame ,deleteSave } from "./systems/storage/saveSystem";
+
 function App() {
 
   const player =
@@ -31,24 +33,43 @@ function App() {
 
   useEffect(() => {
 
-    const interval = setInterval(() => {
+  const interval = setInterval(() => {
 
-      const kiGain =
-        calculateKiGain(player);
+    const player =
+      useGameStore
+        .getState()
+        .player;
 
-      gainKi(kiGain);
+    const kiGain =
+      calculateKiGain(player);
 
-      progressQiCultivation();
+    gainKi(kiGain);
 
-    }, 1000);
+    progressQiCultivation();
 
-    return () => clearInterval(interval);
+  }, 1000);
 
-  }, [
-    player,
-    gainKi,
-    progressQiCultivation,
-  ]);
+  return () =>
+    clearInterval(interval);
+
+}, [
+  gainKi,
+  progressQiCultivation
+]);
+
+  useEffect(() => {
+
+  const interval =
+    setInterval(() => {
+
+      saveGame(player);
+
+    }, 10000);
+
+  return () =>
+    clearInterval(interval);
+
+}, [player]);
 
   const currentRealm =
   getRealmByLevel(
@@ -102,6 +123,35 @@ function App() {
     >
       Breakthrough
     </button>
+
+    <button
+  onClick={() =>
+    saveGame(player)
+  }
+>
+  Save
+</button>
+
+<button
+  onClick={() => {
+
+    const confirmed =
+      window.confirm(
+        "Delete save?"
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    deleteSave();
+
+    window.location.reload();
+
+  }}
+>
+  Delete Save
+</button>
 
   </div>
 );

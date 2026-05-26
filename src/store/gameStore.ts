@@ -1,4 +1,5 @@
-import { create } from "zustand";
+import { create }
+from "zustand";
 
 import type { PlayerState }
 from "../types/player";
@@ -6,13 +7,24 @@ from "../types/player";
 import { createPlayer }
 from "../utils/createPlayer";
 
-import { progressCultivation }
-from "../systems/cultivation/progression";
+import {
+  progressCultivation,
+} from "../systems/cultivation/progression";
 
-import { attemptBreakthrough }
-from "../systems/cultivation/breakthrough";
+import {
+  attemptBreakthrough,
+} from "../systems/cultivation/breakthrough";
+
+import {
+  saveGame,
+  loadGame,
+} from "../systems/storage/saveSystem";
+
+const savedPlayer =
+  loadGame();
 
 interface GameStore {
+
   player: PlayerState;
 
   setPlayer:
@@ -20,73 +32,83 @@ interface GameStore {
 
   gainKi:
     (amount: number) => void;
-  
-    progressQiCultivation:
+
+  progressQiCultivation:
     () => void;
 
-    attemptQiBreakthrough:
-  () => void;
+  attemptQiBreakthrough:
+    () => void;
 }
 
 export const useGameStore =
-  create<GameStore>((set) => ({
+create<GameStore>((set) => ({
 
-    player: createPlayer({
-  name: "Player",
+  player:
 
-  innateStats: {
-    absorption: 1,
-    luck: 1,
-    comprehension: 1,
-    soulTalent: 1,
-    fate: 1,
-  },
-}),
+    savedPlayer ??
 
-    setPlayer: (player) =>
-      set({ player }),
+    createPlayer({
+      name: "Player",
 
-   gainKi: (amount) =>
-  set((state) => ({
-    player: {
-      ...state.player,
-
-      qiCultivation: {
-        ...state.player.qiCultivation,
-
-        currentKi:
-          state.player.qiCultivation
-            .currentKi + amount,
+      innateStats: {
+        absorption: 1,
+        luck: 1,
+        comprehension: 1,
+        soulTalent: 1,
+        fate: 1,
       },
-    },
-  })),
+    }),
 
-progressQiCultivation: () =>
-  set((state) => ({
+  setPlayer: (player) => {
 
-    player: {
-      ...state.player,
+    saveGame(player);
 
-      qiCultivation:
-        progressCultivation(
-          state.player.qiCultivation
-        ),
-    },
+    set({ player });
+  },
 
-  })),
+  gainKi: (amount) =>
+    set((state) => ({
+
+      player: {
+
+        ...state.player,
+
+        qiCultivation: {
+
+          ...state.player
+            .qiCultivation,
+
+          currentKi:
+            state.player
+              .qiCultivation
+              .currentKi +
+            amount,
+        },
+      },
+    })),
+
+  progressQiCultivation: () =>
+    set((state) => ({
+
+      player: {
+
+        ...state.player,
+
+        qiCultivation:
+          progressCultivation(
+            state.player
+              .qiCultivation
+          ),
+      },
+    })),
 
   attemptQiBreakthrough: () =>
-  set((state) => ({
+    set((state) => ({
 
-    player: {
-      ...state.player,
-
-      qiCultivation:
+      player:
         attemptBreakthrough(
-        state.player
+          state.player
         ),
-    },
+    })),
 
-  })),
-      
 }));

@@ -16,6 +16,7 @@ import {
   createBaseAffinities,
   createBaseResistances,
 } from "../utils/statUtils";
+import { createBaseModifiers } from "./modifierUtils";
 
 const createBaseStats =
 (): BaseStats => ({
@@ -91,5 +92,8 @@ export const createPlayer = (
     spiritStones: 0,
 
     pets: [],
+
+    modifiers:
+  createBaseModifiers(),
   };
 };

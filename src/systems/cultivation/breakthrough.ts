@@ -1,47 +1,70 @@
-import { QI_REALMS }
-from "../../data/realms";
+import {
+  QI_REALMS,
+} from "../../data/realms";
+
+import {
+  calculateStageBonus,
+  MAJOR_REALM_BONUSES,
+} from "../../data/realmBonuses";
 
 import type { PlayerState }
 from "../../types/player";
 
-import type {
-  CultivationState,
-} from "../../types/cultivation";
+import {
+  getRealmByLevel,
+} from "../../utils/realmsUtils";
 
 export const attemptBreakthrough = (
   player: PlayerState
-): CultivationState => {
+): PlayerState => {
 
   const cultivation =
     player.qiCultivation;
 
   if (!cultivation.isAtPeak) {
-    return cultivation;
+    return player;
   }
 
   const currentRealm =
-    QI_REALMS[cultivation.realm];
+    getRealmByLevel(
+      cultivation.realm
+    );
 
-  // Bonuses
+  if (!currentRealm) {
+    return player;
+  }
+
+  // Talent bonuses
   const luckBonus =
-    player.innateStats.luck
-    * 0.01;
+    player.innateStats.luck * 0.01;
 
   const comprehensionBonus =
-    player.innateStats.comprehension
-    * 0.015;
+    player.innateStats
+      .comprehension * 0.015;
 
   const soulTalentBonus =
-    player.innateStats.soulTalent
-    * 0.01;
+    player.innateStats
+      .soulTalent * 0.01;
 
-  // Fórmula final
-  const successChance =
-    0.5 +
-    luckBonus +
-    comprehensionBonus +
-    soulTalentBonus -
-    currentRealm.breakthroughDifficulty;
+  // Final chance
+ const baseChance = 0.8;
+
+const calculatedChance =
+  baseChance +
+  luckBonus +
+  comprehensionBonus +
+  soulTalentBonus +
+  player.modifiers.breakthroughChance -
+  currentRealm.breakthroughDifficulty;
+
+const successChance =
+  Math.max(
+    0.15,
+    Math.min(
+      0.95,
+      calculatedChance
+    )
+  );
 
   const success =
     Math.random() < successChance;
@@ -50,57 +73,180 @@ export const attemptBreakthrough = (
   if (!success) {
 
     return {
-      ...cultivation,
+      ...player,
 
-      currentKi:
-        cultivation.requiredKi * 0.5,
+      qiCultivation: {
+        ...cultivation,
 
-      isAtPeak: false,
+        currentKi:
+          cultivation.requiredKi * 0.5,
+
+        isAtPeak: false,
+      },
     };
   }
 
-  // REALM BREAKTHROUGH
+  // -------------------
+  // MAJOR BREAKTHROUGH
+  // -------------------
+
   if (
     cultivation.stage >=
     currentRealm.stages
   ) {
 
     const nextRealm =
-      QI_REALMS[
+      getRealmByLevel(
         cultivation.realm + 1
+      );
+
+    if (!nextRealm) {
+      return player;
+    }
+
+    const majorBonus =
+      MAJOR_REALM_BONUSES[
+        nextRealm.level
       ];
 
+      
+
     return {
-      ...cultivation,
 
-      realm: nextRealm.level,
+  ...player,
 
-      stage: 1,
+  lifespan:
+    player.lifespan +
+    majorBonus.lifespan,
 
-      currentKi: 0,
+  modifiers: {
 
-      requiredKi:
-        nextRealm.baseKiRequired,
+    ...player.modifiers,
 
-      isAtPeak: false,
-    };
-  }
+    kiMultiplier:
+      player.modifiers
+        .kiMultiplier *
+      majorBonus.kiMultiplier,
 
-  // STAGE BREAKTHROUGH
-  const nextStage =
-    cultivation.stage + 1;
+    breakthroughChance:
+      player.modifiers
+        .breakthroughChance +
+      majorBonus
+        .breakthroughBonus,
+  },
 
-  return {
+  baseStats: {
+
+    ...player.baseStats,
+
+    spiritualPower:
+      player.baseStats
+        .spiritualPower +
+      majorBonus
+        .spiritualPowerBonus,
+  },
+
+  qiCultivation: {
+
     ...cultivation,
 
-    stage: nextStage,
+    realm: nextRealm.level,
+
+    stage: 1,
 
     currentKi: 0,
 
     requiredKi:
-      currentRealm.baseKiRequired *
-      nextStage,
+      nextRealm.baseKiRequired,
 
     isAtPeak: false,
+  },
+
+  bodyCultivation:
+    majorBonus
+      .unlocksBodyCultivation
+      ? player.bodyCultivation
+      : player.bodyCultivation,
+
+  soulCultivation:
+    majorBonus
+      .unlocksSoulCultivation
+      ? player.soulCultivation
+      : player.soulCultivation,
+};
+  }
+
+  // -------------------
+  // STAGE BREAKTHROUGH
+  // -------------------
+
+  const bonus =
+    calculateStageBonus(
+      cultivation.realm,
+      cultivation.stage
+    );
+
+  const nextStage =
+    cultivation.stage + 1;
+
+  return {
+
+    ...player,
+
+    baseStats: {
+
+      ...player.baseStats,
+
+      strength:
+        player.baseStats.strength +
+        bonus.strength,
+
+      agility:
+        player.baseStats.agility +
+        bonus.agility,
+
+      dexterity:
+        player.baseStats.dexterity +
+        bonus.dexterity,
+
+      vitality:
+        player.baseStats.vitality +
+        bonus.vitality,
+
+      spiritualPower:
+        player.baseStats
+          .spiritualPower +
+        bonus.spiritualPower,
+
+      physicalDefense:
+        player.baseStats
+          .physicalDefense +
+        bonus.physicalDefense,
+
+      spiritualDefense:
+        player.baseStats
+          .spiritualDefense +
+        bonus.spiritualDefense,
+
+      constitution:
+        player.baseStats
+          .constitution +
+        bonus.constitution,
+    },
+
+    qiCultivation: {
+
+      ...cultivation,
+
+      stage: nextStage,
+
+      currentKi: 0,
+
+      requiredKi:
+        currentRealm.baseKiRequired *
+        nextStage,
+
+      isAtPeak: false,
+    },
   };
 };

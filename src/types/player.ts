@@ -14,6 +14,10 @@ import type {
   CultivationState,
 } from "./cultivation";
 
+import type {
+  PlayerModifiers,
+} from "./modifiers";
+
 export interface PlayerState {
   name: string;
 
@@ -46,4 +50,6 @@ export interface PlayerState {
   spiritStones: number;
 
   pets: string[];
+
+  modifiers: PlayerModifiers;
 }
